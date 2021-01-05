@@ -1,0 +1,28 @@
+jdbc:
+  cid: jdbc
+  driver: org.sqlite.JDBC
+  url: jdbc:sqlite:C:/Programs/sqlite-tools-win32-x86-3340000/test1.db
+  user: user
+  pwd: pwd
+
+sources:
+  - sid: sid
+    cid: jdbc
+    query: select delay from delay_table where service = ?
+
+defaultDelayConfig: &dc
+  enable: true
+  sid: sid
+  params: !intarr [0]
+
+serviceStubConfigs:
+  - localName: local_id
+    remoteName: remote_id
+    delayConfig:
+      !!net.stapi.mv.service.delay.RandomAccessDelayConfig
+      << : *dc
+  - localName: local_id+1
+    remoteName: remote_id+1
+    delayConfig:
+      !!net.stapi.mv.service.delay.DefaultDelayConfig
+      << : *dc
